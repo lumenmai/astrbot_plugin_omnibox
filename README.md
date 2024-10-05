@@ -12,4 +12,4 @@ Astrbot的占卜插件
 
 # Preview
 
-<img src="./pic/kajyu.jpg" alt="kajyu" style="zoom:25%;" />
+<img src="./preview/divination_preview1.png" alt="divination_preview1" style="zoom:75%;" />
