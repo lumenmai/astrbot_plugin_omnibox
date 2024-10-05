@@ -1,10 +1,15 @@
-# helloworld
+# AstrBot-Plugin-Divination
 
-AstrBot 插件模板
+Astrbot的占卜插件
 
-A template plugin for AstrBot plugin feature
+# Feature
 
-# 支持
+- [x] 每日占卜
+- [ ] 自定义图片
+- [ ] 限制占卜次数
+- [ ] 结合占卜的事件
+- [ ] ...
 
-[帮助文档](https://astrbot.soulter.top/center/docs/%E5%BC%80%E5%8F%91/%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/
-)
+# Preview
+
+<img src="./pic/kajyu.jpg" alt="kajyu" style="zoom:25%;" />
