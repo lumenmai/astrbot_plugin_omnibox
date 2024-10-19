@@ -2,6 +2,7 @@ import os
 import random
 from util.log import LogManager
 from logging import Logger
+from util.plugin_dev.api.v1.types import Image, Plain, At
 
 flag_not_support = False
 try:
@@ -23,7 +24,7 @@ class DivinationPlugin:
     """
     def __init__(self, context: Context) -> None:
         self.context = context
-        self.context.register_commands("divination", "占卜", "内置测试指令。", 1, self.divination, False, True)
+        self.context.register_commands("divination", "占卜", "发送占卜图片", 1, self.divination, False, True)
 
     """
     指令处理函数。
@@ -33,9 +34,15 @@ class DivinationPlugin:
     """
     def divination(self, message: AstrMessageEvent, context: Context):
         image = self.get_random_image()
-        if not image:
-            return CommandResult().message("我的脑子空空的，没有办法占卜啦！")
-        return CommandResult().file_image(image)
+        user_id = message.message_obj.sender.user_id
+        if image:
+            return CommandResult(
+                message_chain=[
+                    At(qq=user_id),
+                    image
+                ],
+            )
+        return CommandResult().message("我的脑子空空的，没有办法占卜啦！")
     
     def get_random_image(self):
         current_dir = os.path.dirname(__file__)
@@ -44,7 +51,8 @@ class DivinationPlugin:
         images = [f for f in os.listdir(pic_dir) if f.lower().endswith(('.jpg', '.png'))]
         if images:
             random_image = random.choice(images)  # 随机选择一张
-            return os.path.join(pic_dir, random_image)
+            image_path = os.path.join(pic_dir, random_image)
+            return Image.fromFileSystem(image_path)
         else:
             logger.warning("没有找到图片。")
             return None
