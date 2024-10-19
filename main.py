@@ -1,15 +1,16 @@
-import os
-import random
-import datetime
-import asyncio
-from util.log import LogManager
-from logging import Logger
-from util.plugin_dev.api.v1.types import Image, Plain, At, Poke
-
 flag_not_support = False
 try:
     from util.plugin_dev.api.v1.bot import Context, AstrMessageEvent, CommandResult
     from util.plugin_dev.api.v1.config import *
+    import os
+    import random
+    import datetime
+    import asyncio
+    from util.log import LogManager
+    from logging import Logger
+    from util.plugin_dev.api.v1.types import Image, Plain, At
+    import json
+
 except ImportError:
     flag_not_support = True
     print("导入接口失败。请升级到 AstrBot 最新版本。")
@@ -24,36 +25,39 @@ class OmniboxPlugin:
     - context.register_task: 注册任务
     - context.message_handler: 消息处理器(平台类插件用)
     """
+
     def __init__(self, context: Context) -> None:
-        self.NAMESPACE = "omnibox"
+        self.NAMESPACE = "astrbot_plugin_omnibox"
+        self.context = context
+
         put_config(self.NAMESPACE, "开启占卜", "divination_on", True, "开启占卜")
         put_config(self.NAMESPACE, "开启签到", "checkin_on", True, "开启签到")
-        put_config(self.NAMESPACE, "开启早安", "morning_on", True, "开启早安")
-        put_config(self.NAMESPACE, "开启晚安", "night_on", True, "开启晚安")
-        self.context = context
+        # put_config(self.NAMESPACE, "开启早安信息", "morning_on", True, "开启早安信息")
+        # put_config(self.NAMESPACE, "开启晚安信息", "night_on", True, "开启晚安信息")
+        # put_config(self.NAMESPACE, "早安时间设置", "morning_time", 8, "发送早安消息的时间")
+        # put_config(self.NAMESPACE, "晚安时间设置", "night_time", 23, "发送晚安消息的时间")
 
         self.cfg = load_config(self.NAMESPACE)
         self.groups = self.load_groups()
 
         if self.cfg.get("divination_on", True):
-            self.context.register_commands("Omnibox", "占卜", "发送占卜图片", 1, self.divination, False, True)
-
+            self.context.register_commands("astrbot_plugin_omnibox", "占卜", "发送占卜图片", 1, self.divination, False, True)
         if self.cfg.get("checkin_on", True):
-            self.context.register_commands("Omnibox", "签到", "每日签到", 1, self.checkin, False, True)
-
-        if self.cfg.get("morning_on", True):
-            self.context.register_task(self.daily_task(8, 0, "早上好喵~莲已经起床了喵~"), "早安")
-
-        if self.cfg.get("night_on", True):
-            self.context.register_task(self.daily_task(23, 0, "大家晚安喵~"), "晚安")
-
-
+            self.context.register_commands("astrbot_plugin_omnibox", "签到", "每日签到", 1, self.checkin, False, True)
+        # if self.cfg.get("morning_on", True):
+        #     self.context.register_task(self.daily_task(self.cfg.get("morning_time", 8), 16, "早上好喵~莲已经起床了喵~"), "早安")
+        # if self.cfg.get("night_on", True):
+        #     self.context.register_task(self.daily_task(self.cfg.get("night_time", 23), 16, "大家晚安喵~"), "晚安")
+        self.context.register_task(self.daily_task(8, 0, "早上好喵~莲已经起床了喵~"),
+                                   "早安")
+        self.context.register_task(self.daily_task(23,0, "大家晚安喵~"), "晚安")
     """
     指令处理函数。
-    
+
     - 需要接收两个参数：message: AstrMessageEvent, context: Context
     - 返回 CommandResult 对象
     """
+
     def divination(self, message: AstrMessageEvent, context: Context):
         image = self.get_random_image("divination_pic")
         user_id = message.message_obj.sender.user_id
