@@ -1,6 +1,6 @@
 name: divination
 desc: Astrbot的占卜插件，支持自定义图片。
 help: 输入“占卜”即可
-version: v1.0.0
+version: v1.0.1
 author: lumenmai
 repo: https://github.com/lumenmai/astrbot_plugin_divination
