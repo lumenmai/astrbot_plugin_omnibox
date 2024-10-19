@@ -1,13 +1,12 @@
-# AstrBot-Plugin-Divination
+# AstrBot-Plugin-Omnibox
 
-Astrbot的占卜插件
+Astrbot的大杂烩插件
 
 # Feature
 
-- [x] 每日占卜
-- [x] 自定义图片 (在pic文件夹下放入jpg或png图片，已有默认图片)
-- [ ] 限制占卜次数
-- [ ] 结合占卜的事件
+- [x] 每日占卜（可在divination_pic文件夹下放入自定义图片)
+- [x] 早晚安
+- [ ] 签到
 - [ ] ...
 
 # Overview
