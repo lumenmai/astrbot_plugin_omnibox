@@ -25,12 +25,27 @@ class OmniboxPlugin:
     - context.message_handler: 消息处理器(平台类插件用)
     """
     def __init__(self, context: Context) -> None:
+        self.NAMESPACE = "omnibox"
+        put_config(self.NAMESPACE, "开启占卜", "divination_on", True, "开启占卜")
+        put_config(self.NAMESPACE, "开启签到", "checkin_on", True, "开启签到")
+        put_config(self.NAMESPACE, "开启早安", "morning_on", True, "开启早安")
+        put_config(self.NAMESPACE, "开启晚安", "night_on", True, "开启晚安")
         self.context = context
+
+        self.cfg = load_config(self.NAMESPACE)
         self.groups = self.load_groups()
-        self.context.register_commands("Omnibox", "占卜", "发送占卜图片", 1, self.divination, False, True)
-        self.context.register_commands("Omnibox", "签到", "每日签到", 1, self.checkin, False, True)
-        self.context.register_task(self.daily_task(8, 0, "早上好喵~莲已经起床了喵~"), "早安")
-        self.context.register_task(self.daily_task(23, 0, "大家晚安喵~"), "晚安")
+
+        if self.cfg.get("divination_on", True):
+            self.context.register_commands("Omnibox", "占卜", "发送占卜图片", 1, self.divination, False, True)
+
+        if self.cfg.get("checkin_on", True):
+            self.context.register_commands("Omnibox", "签到", "每日签到", 1, self.checkin, False, True)
+
+        if self.cfg.get("morning_on", True):
+            self.context.register_task(self.daily_task(8, 0, "早上好喵~莲已经起床了喵~"), "早安")
+
+        if self.cfg.get("night_on", True):
+            self.context.register_task(self.daily_task(23, 0, "大家晚安喵~"), "晚安")
 
 
     """

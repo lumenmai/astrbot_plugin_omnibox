@@ -1,6 +1,6 @@
 name: Omnibox
 desc: 大杂烩插件
 help: 无
-version: v1.1.0
+version: v1.1.1
 author: lumenmai
-repo: https://github.com/lumenmai/astrbot_plugin_divination
+repo: https://github.com/lumenmai/astrbot_plugin_omnibox
